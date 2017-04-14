@@ -1,5 +1,5 @@
 # alias2
-*** alias2 ** is a simple project written in Python 3. It helps you creating and managing alias in Terminal.
+**alias2** is a simple project written in Python 3. It helps you creating and managing alias in Terminal.
 
 ## USAGE
 Use `--help` to get more detail information.
