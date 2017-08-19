@@ -8,20 +8,19 @@ with open('LICENSE', 'r') as f:
 
 setup(
     name='alias2',
-    version='1.1',
+    version='1.2',
     author='Hi Im darkness',
     author_email='nghthach98@gmail.com',
     description='A sample Python project',
     long_description=readme,
     license=license,
     packages=find_packages(exclude=['__pycache__']),
-    package_data={'alias2': ['data/user.data']},
     install_requires=[
         'click',
     ],
     entry_points={
         'console_scripts': [
-            'alias2=alias2.script.interface:init',
+            'alias2=alias2.interface:init',
         ],
     },
 )

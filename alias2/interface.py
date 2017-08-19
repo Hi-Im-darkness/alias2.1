@@ -1,11 +1,5 @@
 import click
-from alias2.script.command import *
-from pkg_resources import resource_filename
-
-userData = None
-bashLink = None
-
-userLink = resource_filename('alias2.data', 'user.data')
+from alias2.command import *
 
 
 @click.group()
@@ -13,22 +7,7 @@ def init():
     '''A simple project written in Python 3.
     It helps you creating and managing alias in Terminal.
     '''
-    global bashLink
-    while True:
-        try:
-            # file save user data
-            userData = open(userLink, 'r')
-            user = userData.readline()
-            if user == 'root':
-                bashLink = '/root/.bashrc'
-            else:
-                bashLink = '/home/%s/.bashrc' % user  # check user is true
-            with open(bashLink):
-                pass
-        except:
-            resetFunc()
-        else:
-            break
+    pass
 
 
 @init.command()
@@ -36,13 +15,13 @@ def init():
 @click.argument('content', required=True)
 def add(key, content):
     '''Add new alias'''
-    command(bashLink).add(key, content)
+    Command().add(key, content)
 
 
 @init.command()
 def list():
     '''Displays your alias'''
-    command(bashLink).list()
+    Command().list()
 
 
 @init.command()
@@ -54,7 +33,7 @@ def list():
               help='Edit content of your alias')
 def edit(mode, aliasnum, new):
     '''Edit your alias'''
-    command(bashLink).edit(mode, aliasnum, new)
+    Command().edit(mode, aliasnum, new)
 
 
 @init.command()
@@ -68,34 +47,21 @@ def delete(mode, aliasnum):
         answer = input()
         if answer == 'n' or answer == 'N':
             return
-        command(bashLink).delAll()
+        Command().delAll()
     else:
-        command(bashLink).optionDel(aliasnum)
+        Command().optionDel(aliasnum)
 
 
 @init.command()
 def backup():
     '''Backup your alias'''
-    command(bashLink).backup()
+    Command().backup()
 
 
 @init.command()
 def restore():
     '''Restore your alias'''
-    command(bashLink).restore()
-
-
-@init.command()
-def reset():
-    '''Reset infomation of user'''
-    resetFunc()
-
-
-def resetFunc():
-    '''Reset infomation of user'''
-    user = input("enter user: ")
-    with open(userLink, 'w') as userData:  # create file
-        userData.write(user)
+    Command().restore()
 
 
 if __name__ == '__main__':

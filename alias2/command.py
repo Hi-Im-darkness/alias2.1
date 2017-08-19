@@ -1,7 +1,8 @@
 import os
+from getpass import getuser
 
 
-class alias:
+class Alias:
     def __init__(self, pos, line):
         self.startPos = pos
         self.rawAlias = line
@@ -15,33 +16,41 @@ class alias:
         return [key, content]
 
 
-class command():
-    def __init__(self, link):
+class Command():
+    username = getuser()
+    if username == 'root':
+        path = '/root/.bashrc'
+    else:
+        path = '/home/%s/.bashrc' % username
+
+    print(path)
+
+    def __init__(self):
         self.nAlias = 0
-        self.link = link
+        self.path = self.__class__.path
         self.alias = []
-        with open(self.link, 'r') as bashrc:
+        with open(self.path, 'r') as bashrc:
             while True:
                 pos = bashrc.tell()
                 str = bashrc.readline()
                 if len(str) == 0:
                     break
                 if str[0:5] == 'alias':
-                    self.alias.append(alias(pos, str))
+                    self.alias.append(Alias(pos, str))
                     self.nAlias += 1
 
     def insert(self, num, str):
-        with open(self.link, 'r') as bashrc:
+        with open(self.path, 'r') as bashrc:
             bashrc.\
                 seek(self.alias[num].startPos + len(self.alias[num].rawAlias))
             after = bashrc.read()
-        with open(self.link, 'a') as bashrc:
+        with open(self.path, 'a') as bashrc:
             bashrc.truncate(self.alias[num].startPos)
             bashrc.write(str + after)
 
     def add(self, key, content):
         line = 'alias %s="%s"\n' % (key, content)
-        with open(self.link, 'a') as f:
+        with open(self.path, 'a') as f:
             f.write(line)
         print('Add alias %r = %r successfully' % (key, content))
 
@@ -85,15 +94,15 @@ class command():
             print('Delete alias number %i successfully' % num)
 
     def backup(self):
-        source = self.link
-        direct = self.link + '.backup'
+        source = self.path
+        direct = self.path + '.backup'
         copyCmd = 'cp %s %s' % (source, direct)
         os.system(copyCmd)
         print('Backup successfully')
 
     def restore(self):
-        direct = self.link
-        source = self.link + '.backup'
+        direct = self.path
+        source = self.path + '.backup'
         copyCmd = 'cp %s %s' % (source, direct)
         if os.path.exists(source):
             os.system(copyCmd)
