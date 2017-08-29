@@ -23,8 +23,6 @@ class Command():
     else:
         path = '/home/%s/.bashrc' % username
 
-    print(path)
-
     def __init__(self):
         self.nAlias = 0
         self.path = self.__class__.path
